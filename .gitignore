@@ -1,0 +1,28 @@
+# IDE
+.idea
+.vscode
+
+# System/Shell dotfiles
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.ripgreprc
+
+# Claude Code
+.claude/
+.mcp.json
+
+# Git bare repo artifacts (leere Dateien)
+/HEAD
+/config
+/hooks
+/objects
+/refs
+.gitmodules
+
+# OS
+.DS_Store
+Thumbs.db
