@@ -248,9 +248,9 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
 /* --- Hero Section --- */
 .hero {
   position: relative;
-  height: 60vh;
-  min-height: 400px;
-  max-height: 600px;
+  height: 55vh;
+  min-height: 350px;
+  max-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,38 +264,114 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
   max-height: 700px;
 }
 
+/* Animated gradient background */
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
+.hero-bg-fallback {
+  background:
+    radial-gradient(ellipse 120% 80% at 80% 50%, rgba(245, 166, 35, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 120% at 20% 60%, rgba(30, 58, 95, 0.4) 0%, transparent 60%),
+    linear-gradient(160deg, #0a0e14 0%, #111a2e 35%, #0d1117 70%, #0f1923 100%);
+  animation: heroShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes heroShift {
+  0%   { filter: hue-rotate(0deg) brightness(1); }
+  100% { filter: hue-rotate(8deg) brightness(1.05); }
+}
+
+/* Target rings – Zielscheibe */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(245, 166, 35, 0.12) 0%,
+      rgba(245, 166, 35, 0.12) 8%,
+      transparent 8%,
+      transparent 16%,
+      rgba(245, 166, 35, 0.08) 16%,
+      rgba(245, 166, 35, 0.08) 24%,
+      transparent 24%,
+      transparent 32%,
+      rgba(245, 166, 35, 0.05) 32%,
+      rgba(245, 166, 35, 0.05) 40%,
+      transparent 40%,
+      transparent 48%,
+      rgba(30, 58, 95, 0.12) 48%,
+      rgba(30, 58, 95, 0.12) 56%,
+      transparent 56%
+    );
+  animation: targetPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes targetPulse {
+  0%   { opacity: 0.5; transform: translateY(-50%) scale(0.95); }
+  100% { opacity: 1; transform: translateY(-50%) scale(1.05); }
+}
+
+/* Diagonal arrow line */
 .hero-bg::after {
   content: '';
   position: absolute;
+  width: 200%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245, 166, 35, 0.3) 30%,
+    rgba(245, 166, 35, 0.6) 50%,
+    rgba(245, 166, 35, 0.3) 70%,
+    transparent 100%
+  );
+  top: 55%;
+  left: -50%;
+  transform: rotate(-8deg);
+  animation: arrowSweep 8s ease-in-out infinite alternate;
+}
+
+@keyframes arrowSweep {
+  0%   { transform: rotate(-8deg) translateX(-5%); opacity: 0.4; }
+  100% { transform: rotate(-8deg) translateX(5%); opacity: 0.8; }
+}
+
+/* Subtle grid pattern overlay */
+.hero::before {
+  content: '';
+  position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(13, 17, 23, 0.85) 0%,
-    rgba(30, 58, 95, 0.7) 50%,
-    rgba(13, 17, 23, 0.9) 100%
-  );
+  background-image:
+    linear-gradient(rgba(245, 166, 35, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 166, 35, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent);
 }
 
-/* Fallback gradient when no image */
-.hero-bg-fallback {
-  background: linear-gradient(135deg, var(--accent-navy) 0%, var(--bg-dark) 60%, #1a1a2e 100%);
-}
-
-.hero-bg-fallback::after {
-  background: linear-gradient(
-    135deg,
-    rgba(13, 17, 23, 0.5) 0%,
-    rgba(30, 58, 95, 0.3) 50%,
-    rgba(13, 17, 23, 0.6) 100%
-  );
+/* Second target ring – left side, smaller */
+.hero-home .hero-bg-fallback {
+  background:
+    radial-gradient(ellipse 100% 80% at 75% 45%, rgba(245, 166, 35, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 100% at 15% 55%, rgba(30, 58, 95, 0.5) 0%, transparent 55%),
+    radial-gradient(circle 200px at 10% 70%,
+      rgba(30, 58, 95, 0.15) 0%,
+      rgba(30, 58, 95, 0.15) 20%,
+      transparent 20%,
+      transparent 40%,
+      rgba(30, 58, 95, 0.08) 40%,
+      rgba(30, 58, 95, 0.08) 60%,
+      transparent 60%
+    ),
+    linear-gradient(160deg, #0a0e14 0%, #111a2e 35%, #0d1117 70%, #0f1923 100%);
+  animation: heroShift 12s ease-in-out infinite alternate;
 }
 
 .hero-content {
@@ -305,15 +381,27 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
 }
 
 .hero-content h1 {
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.02em;
+}
+
+.hero-content h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-orange), transparent);
+  margin: 0.75rem auto 0;
+  border-radius: 2px;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   color: var(--text-dim);
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0.75rem auto 0;
+  letter-spacing: 0.02em;
 }
 
 /* Diagonal section divider */
