@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initScrollAnimations();
   initLightbox();
+  loadPageTitle();
 });
 
 /* --- Mobile Navigation --- */
@@ -60,6 +61,39 @@ function initScrollAnimations() {
   });
 
   elements.forEach(el => observer.observe(el));
+}
+
+/* --- Page Titles from CMS --- */
+function loadPageTitle() {
+  const hero = document.querySelector('.hero[data-page]');
+  if (!hero) return;
+
+  const pageKey = hero.dataset.page;
+
+  fetch('admin/api.php?action=page_titles')
+    .then(res => res.json())
+    .then(data => {
+      const page = data[pageKey];
+      if (!page) return;
+
+      const h1 = hero.querySelector('.hero-content h1');
+      const p = hero.querySelector('.hero-content p');
+
+      if (h1) h1.textContent = page.title;
+
+      if (page.subtitle) {
+        if (p) {
+          p.textContent = page.subtitle;
+        } else {
+          const newP = document.createElement('p');
+          newP.textContent = page.subtitle;
+          h1.parentNode.appendChild(newP);
+        }
+      } else if (p) {
+        p.remove();
+      }
+    })
+    .catch(() => {}); // Keep static fallback on error
 }
 
 /* --- Lightbox --- */

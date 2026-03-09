@@ -18,6 +18,7 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 
 - **Beiträge verwalten** – Blog-Berichte und Galerie-Alben erstellen, bearbeiten und veröffentlichen
 - **Terminverwaltung** – Termine auf der Startseite pflegen
+- **Seitentitel** – Titel und Untertitel aller Hero-Bereiche über das CMS bearbeiten
 - **Bild-Upload** – Bilder direkt im CMS hochladen (max. 5 MB, JPG/PNG/WebP/GIF); große Bilder werden automatisch im Browser komprimiert und verkleinert
 - **Nutzerverwaltung** – Rollen-basiertes System
 

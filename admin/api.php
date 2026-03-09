@@ -66,6 +66,16 @@ switch ($action) {
         echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
         break;
 
+    case 'page_titles':
+        $stmt = $db->query('SELECT page_key, title, subtitle FROM page_titles ORDER BY page_key');
+        $rows = $stmt->fetchAll();
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['page_key']] = ['title' => $row['title'], 'subtitle' => $row['subtitle']];
+        }
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        break;
+
     default:
         http_response_code(400);
         echo json_encode(['error' => 'Unbekannte Aktion']);

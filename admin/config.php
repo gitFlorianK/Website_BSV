@@ -69,6 +69,12 @@ function initDB(PDO $db): void {
             published INTEGER DEFAULT 1,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+
+        CREATE TABLE IF NOT EXISTS page_titles (
+            page_key TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            subtitle TEXT DEFAULT ''
+        );
     ");
 
     // Seed default events
@@ -77,6 +83,20 @@ function initDB(PDO $db): void {
         ('Anfängerkurs Erwachsene', '06.05. – 10.06.2026', 'Mittwochs 18:30 – ca. 20:00 Uhr, 6 Trainingseinheiten auf dem Bogensportplatz', 1, 1),
         ('Anfängerkurs Kinder & Jugendliche', '29.05. – 13.06.2026', 'Freitags 16:00 – 17:30 Uhr & Samstags 13:00 – 14:30 Uhr, 6 Trainingseinheiten', 2, 1),
         ('Reguläres Training', 'Laufend', 'Sommertraining ab April auf dem Bogensportplatz – siehe Trainingszeiten', 3, 1)
+    ");
+
+    // Seed page titles
+    $db->exec("
+        INSERT INTO page_titles (page_key, title, subtitle) VALUES
+        ('index', 'Herzlich Willkommen', 'Bogensportverein 1960 Plauen e.V.'),
+        ('aktuelles', 'Aktuelles', 'Neuigkeiten, Berichte und Impressionen'),
+        ('training', 'Training', 'Trainingszeiten & Standorte'),
+        ('sponsors', 'Sponsoren', 'Unsere Unterstützer'),
+        ('anfaengerkurs', 'Anfängerkurs', 'Sie haben Interesse am Bogenschießen?'),
+        ('contact', 'Kontakt', 'Wir freuen uns auf Ihre Nachricht'),
+        ('imprint', 'Impressum', ''),
+        ('datenschutz', 'Datenschutzerklärung', ''),
+        ('information', 'Informationen', 'Infoseiten')
     ");
 
     // Default admin account
