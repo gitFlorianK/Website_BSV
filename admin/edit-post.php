@@ -159,8 +159,9 @@ if ($postId) {
 
                 <div class="form-group">
                     <label for="images">Bilder hochladen</label>
-                    <input type="file" id="images" name="images[]" multiple accept="image/jpeg,image/png,image/webp,image/gif">
-                    <small class="form-help">Max. 5 MB pro Bild. JPG, PNG, WebP, GIF erlaubt.</small>
+                    <input type="file" id="imageInput" multiple accept="image/jpeg,image/png,image/webp,image/gif">
+                    <small class="form-help">Max. 5 MB pro Bild. JPG, PNG, WebP, GIF erlaubt. Große Bilder werden automatisch verkleinert.</small>
+                    <div id="imageStatus" style="display:none; margin-top: 0.5rem; padding: 0.5rem; background: var(--surface); border-radius: 4px; font-size: 0.85rem;"></div>
                 </div>
 
                 <?php if (!empty($postImages)): ?>
@@ -194,5 +195,131 @@ if ($postId) {
             </form>
         </div>
     </main>
+    <script>
+    (function() {
+        const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+        const MAX_DIMENSION = 3840;
+        const imageInput = document.getElementById('imageInput');
+        const statusEl = document.getElementById('imageStatus');
+        const form = document.querySelector('.post-form');
+
+        // Create the actual hidden file input used for form submission
+        const hiddenContainer = document.createElement('div');
+        hiddenContainer.style.display = 'none';
+        hiddenContainer.innerHTML = '<input type="file" name="images[]" multiple>';
+        form.appendChild(hiddenContainer);
+        const realInput = hiddenContainer.querySelector('input');
+
+        let processedFiles = [];
+
+        imageInput.addEventListener('change', async function() {
+            const files = Array.from(this.files);
+            if (!files.length) return;
+
+            processedFiles = [];
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Bilder werden verarbeitet...';
+            imageInput.disabled = true;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                statusEl.textContent = `Bild ${i + 1} von ${files.length} wird verarbeitet...`;
+
+                if (file.type === 'image/gif' || file.size <= MAX_SIZE) {
+                    // GIFs not resizable via canvas; small files need no processing
+                    processedFiles.push(file);
+                    continue;
+                }
+
+                try {
+                    const processed = await compressImage(file);
+                    processedFiles.push(processed);
+                } catch (e) {
+                    console.warn('Bildverarbeitung fehlgeschlagen, verwende Original:', e);
+                    processedFiles.push(file);
+                }
+            }
+
+            // Transfer processed files to the real input
+            const dt = new DataTransfer();
+            processedFiles.forEach(f => dt.items.add(f));
+            realInput.files = dt.files;
+
+            const summary = processedFiles.map((f, i) => {
+                const orig = files[i];
+                const sizeMB = (f.size / 1024 / 1024).toFixed(1);
+                if (f !== orig) {
+                    const origMB = (orig.size / 1024 / 1024).toFixed(1);
+                    return `${orig.name}: ${origMB} MB → ${sizeMB} MB`;
+                }
+                return `${f.name}: ${sizeMB} MB`;
+            });
+            statusEl.innerHTML = summary.join('<br>');
+            imageInput.disabled = false;
+        });
+
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                const url = URL.createObjectURL(file);
+
+                img.onload = function() {
+                    URL.revokeObjectURL(url);
+
+                    let { width, height } = img;
+
+                    // Scale down if dimensions exceed maximum
+                    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+                        const ratio = Math.min(MAX_DIMENSION / width, MAX_DIMENSION / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Try decreasing quality until under 5 MB
+                    const outputType = file.type === 'image/png' ? 'image/jpeg' : file.type;
+                    const ext = outputType === 'image/webp' ? '.webp' : '.jpg';
+                    let quality = 0.85;
+
+                    function tryCompress() {
+                        canvas.toBlob(function(blob) {
+                            if (!blob) return reject(new Error('Canvas toBlob failed'));
+
+                            if (blob.size <= MAX_SIZE || quality <= 0.3) {
+                                const name = file.name.replace(/\.[^.]+$/, ext);
+                                resolve(new File([blob], name, { type: outputType, lastModified: Date.now() }));
+                            } else {
+                                quality -= 0.1;
+                                tryCompress();
+                            }
+                        }, outputType, quality);
+                    }
+
+                    tryCompress();
+                };
+
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error('Bild konnte nicht geladen werden'));
+                };
+
+                img.src = url;
+            });
+        }
+
+        // Prevent submission while processing
+        form.addEventListener('submit', function(e) {
+            if (imageInput.disabled) {
+                e.preventDefault();
+                alert('Bitte warten, Bilder werden noch verarbeitet...');
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
