@@ -23,6 +23,14 @@
 /refs
 .gitmodules
 
+# CMS
+admin/data/*.db
+admin/data/*.db-wal
+admin/data/*.db-shm
+uploads/*
+!uploads/.htaccess
+!uploads/index.html
+
 # OS
 .DS_Store
 Thumbs.db

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impressum | Bogensportverein 1960 Plauen e.V.</title>
+  <title>Aktuelles | Bogensportverein 1960 Plauen e.V.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
         <ul class="nav-list">
           <li><a href="index.html">Startseite</a></li>
           <li><a href="training.html">Training</a></li>
-          <li><a href="aktuelles.html">Aktuelles</a></li>
+          <li><a href="aktuelles.html" class="active">Aktuelles</a></li>
           <li><a href="sponsors.html">Sponsoren</a></li>
           <li><a href="information.html">Information</a></li>
           <li><a href="anfaengerkurs.html">Anfängerkurs</a></li>
@@ -37,51 +37,41 @@
   <section class="hero">
     <div class="hero-bg hero-bg-fallback"></div>
     <div class="hero-content">
-      <h1>Impressum</h1>
+      <h1>Aktuelles</h1>
+      <p>Neuigkeiten, Berichte und Impressionen</p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="legal-content fade-in">
 
-        <h3>Angaben gemäß § 5 TMG</h3>
-        <p>
-          Bogensportverein 1960 Plauen e.V.<br>
-          Erich-Knauf-Str. 20<br>
-          08525 Plauen
-        </p>
-        <p>
-          Telefon: 0152-541 366 36<br>
-          E-Mail: info@bogensport-plauen.de<br>
-          Internet: www.bogensport-plauen.de
-        </p>
-
-        <h3>Vertretungsberechtigter Vorstand</h3>
-        <p>
-          Florian Künzel (Vorsitzender)<br>
-          Ronny Krauß<br>
-          Anja Kus
-        </p>
-        <p>
-          Registergericht: Amtsgericht Plauen<br>
-          Registernummer: VR 120
-        </p>
-
-        <h3>Haftung für Inhalte</h3>
-        <p>Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
-
-        <h3>Haftung für Links</h3>
-        <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.</p>
-
-        <h3>Urheberrecht</h3>
-        <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
-
-        <p style="margin-top: 2rem; font-size: 0.85rem;">Quellen: eRecht24</p>
-
+      <!-- Tab Navigation -->
+      <div class="tab-bar fade-in">
+        <button class="tab-btn active" data-tab="all">Alle</button>
+        <button class="tab-btn" data-tab="blog">Berichte</button>
+        <button class="tab-btn" data-tab="gallery">Galerie</button>
       </div>
+
+      <!-- Content loaded from CMS -->
+      <div id="aktuelles-content" class="aktuelles-grid">
+        <p class="loading-state">Inhalte werden geladen...</p>
+      </div>
+
+      <!-- Fallback: static content if API is not available -->
+      <noscript>
+        <p>Bitte aktivieren Sie JavaScript, um die Inhalte anzuzeigen.</p>
+      </noscript>
+
     </div>
   </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Schließen">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="Vorheriges Bild">&#8249;</button>
+    <img src="" alt="Galerie-Bild">
+    <button class="lightbox-nav lightbox-next" aria-label="Nächstes Bild">&#8250;</button>
+  </div>
 
   <footer class="footer">
     <div class="container">
@@ -123,5 +113,6 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/aktuelles.js"></script>
 </body>
 </html>

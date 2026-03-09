@@ -1,13 +1,12 @@
 /* ============================================
    Bogensportverein 1960 Plauen e.V.
-   Navigation, Lightbox, Scroll-Animationen
+   Navigation, Lightbox & Scroll-Animationen
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initScrollAnimations();
   initLightbox();
-  initAccordions();
 });
 
 /* --- Mobile Navigation --- */
@@ -115,32 +114,3 @@ function initLightbox() {
   });
 }
 
-/* --- Blog Accordions --- */
-function initAccordions() {
-  const headers = document.querySelectorAll('.blog-season-header');
-
-  headers.forEach(header => {
-    header.addEventListener('click', () => {
-      const content = header.nextElementSibling;
-      const isOpen = header.classList.contains('open');
-
-      header.classList.toggle('open');
-      content.classList.toggle('open');
-
-      if (!isOpen) {
-        content.style.maxHeight = content.scrollHeight + 'px';
-      } else {
-        content.style.maxHeight = '0';
-      }
-    });
-  });
-
-  // Open first accordion by default
-  const firstHeader = document.querySelector('.blog-season-header');
-  if (firstHeader) {
-    firstHeader.classList.add('open');
-    const firstContent = firstHeader.nextElementSibling;
-    firstContent.classList.add('open');
-    firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
-  }
-}

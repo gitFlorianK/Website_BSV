@@ -1,0 +1,12 @@
+# Only allow image files
+<FilesMatch "\.(?i:jpe?g|png|gif|webp)$">
+    Allow from all
+</FilesMatch>
+
+# Deny everything else
+<FilesMatch "\.(?i:php|phtml|php3|php4|php5|phps)$">
+    Deny from all
+</FilesMatch>
+
+# No directory listing
+Options -Indexes
