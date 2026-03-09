@@ -45,11 +45,20 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 ## Lokal starten
 
 ```bash
-# Im Projektverzeichnis:
+# Nur lokal erreichbar:
 php -S localhost:8000
+
+# Im lokalen Netzwerk erreichbar (z.B. vom Handy/Tablet):
+php -S 0.0.0.0:8000
 ```
 
-Die Website ist dann erreichbar unter **http://localhost:8000**, das CMS unter **http://localhost:8000/admin/**.
+| Zugriff | URL |
+|---|---|
+| Lokal | http://localhost:8000 |
+| Netzwerk | http://&lt;IP-Adresse&gt;:8000 (eigene IP mit `hostname -I` ermitteln) |
+| CMS-Login | http://localhost:8000/admin/ |
+
+> **Hinweis:** Bei Zugriff aus dem Netzwerk muss ggf. der Port in der Firewall freigegeben werden: `sudo firewall-cmd --add-port=8000/tcp`
 
 ## Projektstruktur
 
