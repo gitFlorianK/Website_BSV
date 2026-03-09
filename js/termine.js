@@ -37,17 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     timeline.innerHTML = events.map(event => `
       <div class="timeline-item">
         <div class="timeline-card">
-          <span class="timeline-date">${escapeHtml(event.date_text)}</span>
-          <h4>${escapeHtml(event.title)}</h4>
-          ${event.description ? `<p>${escapeHtml(event.description)}</p>` : ''}
+          <span class="timeline-date">${esc(event.date_text)}</span>
+          <h4>${esc(event.title)}</h4>
+          ${event.description ? `<p>${esc(event.description)}</p>` : ''}
         </div>
       </div>
     `).join('');
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 });

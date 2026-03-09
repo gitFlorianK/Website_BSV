@@ -4,10 +4,10 @@ Offizielle Website des Bogensportvereins 1960 Plauen e.V.
 
 ## Technologie
 
-- **HTML5** – 9 Seiten (Frontend)
+- **PHP 8+** – Shared Includes für Header/Footer, Custom Pages
 - **CSS3** – Custom Properties, Grid, Flexbox, Animationen
 - **Vanilla JavaScript** – Navigation, Lightbox, Scroll-Animationen, CMS-Anbindung
-- **PHP 8+ / SQLite** – CMS-Backend mit Nutzerverwaltung
+- **SQLite** – CMS-Backend mit Nutzerverwaltung
 - **Google Fonts** – Inter (CDN)
 
 ## CMS
@@ -19,6 +19,7 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 - **Beiträge verwalten** – Blog-Berichte und Galerie-Alben erstellen, bearbeiten und veröffentlichen
 - **Terminverwaltung** – Termine auf der Startseite pflegen
 - **Seiteninhalte bearbeiten** – Alle Seitentexte über das CMS pflegen: Trainingszeiten, Anfängerkurse (Termine, Preise, Status), Sponsoren, Vorstand, Kontaktdaten, Impressum, Datenschutz, externe Links
+- **Eigene Seiten** – Neue Seiten mit frei wählbarem Inhalt erstellen, optional in der Navigation anzeigen
 - **Bild-Upload** – Bilder direkt im CMS hochladen (max. 5 MB, JPG/PNG/WebP/GIF); große Bilder werden automatisch im Browser komprimiert und verkleinert
 - **Nutzerverwaltung** – Rollen-basiertes System
 
@@ -26,7 +27,7 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 
 | Rolle | Rechte |
 |---|---|
-| **Admin** | Voller Zugriff: Beiträge, Termine, Benutzerverwaltung |
+| **Admin** | Voller Zugriff: Beiträge, Termine, Seiteninhalte, Benutzerverwaltung |
 | **Redakteur** | Beiträge und Termine erstellen/bearbeiten |
 
 ### Standard-Login
@@ -39,7 +40,7 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 
 | Abhängigkeit | Typ | Beschreibung |
 |---|---|---|
-| PHP 8.0+ mit SQLite | Server | Für CMS-Backend und API |
+| PHP 8.0+ mit SQLite | Server | Für CMS-Backend, API und Seiten-Rendering |
 | Moderner Webbrowser | Laufzeit | Chrome, Firefox, Safari oder Edge (aktuelle Version) |
 | Google Fonts (Inter) | CDN | Fallback auf System-Fonts |
 
@@ -89,20 +90,25 @@ php -S 0.0.0.0:8000
 
 ```
 website_bsv/
-├── index.html              # Startseite (Willkommen, Termine, Vorstand)
-├── aktuelles.html          # Blog + Galerie (CMS-gesteuert)
-├── training.html           # Trainingszeiten Sommer/Winter
-├── sponsors.html           # Sponsoren
-├── information.html        # Links zu Verbänden und Vereinen
-├── anfaengerkurs.html      # Anfängerkurs-Infos und Termine
-├── contact.html            # Kontaktdaten
-├── imprint.html            # Impressum
-├── datenschutz.html        # Datenschutzerklärung
+├── index.php               # Startseite (Willkommen, Termine, Vorstand)
+├── aktuelles.php           # Blog + Galerie (CMS-gesteuert)
+├── training.php            # Trainingszeiten Sommer/Winter
+├── sponsors.php            # Sponsoren
+├── information.php         # Links zu Verbänden und Vereinen
+├── anfaengerkurs.php       # Anfängerkurs-Infos und Termine
+├── contact.php             # Kontaktdaten
+├── imprint.php             # Impressum
+├── datenschutz.php         # Datenschutzerklärung
+├── page.php                # Template für eigene CMS-Seiten
+├── includes/
+│   ├── header.php          # Gemeinsamer Header (Head, Navigation)
+│   └── footer.php          # Gemeinsamer Footer (Kontakt, Links, Scripts)
 ├── Logo_Verein_2_FK.JPG    # Vereinslogo (Header)
 ├── css/
 │   └── style.css           # Gesamtes Styling
 ├── js/
-│   ├── main.js             # Navigation, Lightbox, Animationen
+│   ├── main.js             # Navigation, Lightbox, Animationen, Hilfsfunktionen
+│   ├── content.js          # CMS-Content-Loader (alle Seiten)
 │   ├── aktuelles.js        # CMS-Content-Loader (Aktuelles-Seite)
 │   └── termine.js          # Termin-Loader (Startseite)
 ├── admin/
@@ -111,9 +117,14 @@ website_bsv/
 │   ├── posts.php           # Beitragsübersicht
 │   ├── edit-post.php       # Beitrag erstellen/bearbeiten
 │   ├── events.php          # Terminverwaltung
+│   ├── pages.php           # Seiteninhalte-Übersicht
+│   ├── edit-content.php    # Seiteninhalte bearbeiten
+│   ├── custom-pages.php    # Eigene Seiten verwalten
+│   ├── edit-custom-page.php # Eigene Seite erstellen/bearbeiten
 │   ├── users.php           # Benutzerverwaltung (nur Admin)
 │   ├── api.php             # JSON-API für Frontend
 │   ├── config.php          # DB-Setup, Auth, Sicherheit
+│   ├── schema.php          # Datenbank-Schema und Seed-Daten
 │   ├── logout.php          # Abmeldung
 │   ├── css/admin.css       # Admin-Panel-Styling
 │   ├── partials/nav.php    # Admin-Navigation

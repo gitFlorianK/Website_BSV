@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let html = '';
     for (const [category, posts] of Object.entries(grouped)) {
       html += `<div class="aktuelles-category fade-in">`;
-      html += `<h3 class="category-title">${escapeHtml(category)}</h3>`;
+      html += `<h3 class="category-title">${esc(category)}</h3>`;
 
       posts.forEach(post => {
         if (post.type === 'blog') {
@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = html;
 
     // Re-init scroll animations and lightbox for new content
-    initNewAnimations();
-    initDynamicLightbox();
+    initScrollAnimations(container);
+    initLightbox(container);
   }
 
   function renderBlogPost(post) {
@@ -90,19 +90,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="post-date">${date}</span>
           <span class="post-badge post-badge-blog">Bericht</span>
         </div>
-        <h4>${escapeHtml(post.title)}</h4>
+        <h4>${esc(post.title)}</h4>
         <div class="post-content">${post.content || ''}</div>
     `;
 
     if (post.images && post.images.length > 0) {
       html += `<div class="post-images">`;
       post.images.forEach(img => {
-        html += `<div class="gallery-item"><img src="uploads/${escapeHtml(img.filename)}" alt="${escapeHtml(img.alt_text || post.title)}" loading="lazy"></div>`;
+        html += `<div class="gallery-item"><img src="uploads/${esc(img.filename)}" alt="${esc(img.alt_text || post.title)}" loading="lazy"></div>`;
       });
       html += `</div>`;
     }
 
-    html += `<div class="post-author">von ${escapeHtml(post.author)}</div>`;
+    html += `<div class="post-author">von ${esc(post.author)}</div>`;
     html += `</article>`;
     return html;
   }
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="post-date">${date}</span>
           <span class="post-badge post-badge-gallery">Galerie</span>
         </div>
-        <h4>${escapeHtml(post.title)}</h4>
+        <h4>${esc(post.title)}</h4>
     `;
 
     if (post.content) {
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (post.images && post.images.length > 0) {
       html += `<div class="gallery-grid">`;
       post.images.forEach(img => {
-        html += `<div class="gallery-item"><img src="uploads/${escapeHtml(img.filename)}" alt="${escapeHtml(img.alt_text || post.title)}" loading="lazy"></div>`;
+        html += `<div class="gallery-item"><img src="uploads/${esc(img.filename)}" alt="${esc(img.alt_text || post.title)}" loading="lazy"></div>`;
       });
       html += `</div>`;
     }
@@ -134,77 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return html;
   }
 
-  function initDynamicLightbox() {
-    const galleryItems = container.querySelectorAll('.gallery-item');
-    const lightbox = document.getElementById('lightbox');
-    if (!galleryItems.length || !lightbox) return;
-
-    const lightboxImg = lightbox.querySelector('img');
-    const closeBtn = lightbox.querySelector('.lightbox-close');
-    const prevBtn = lightbox.querySelector('.lightbox-prev');
-    const nextBtn = lightbox.querySelector('.lightbox-next');
-
-    let currentIndex = 0;
-    const images = Array.from(galleryItems).map(item => item.querySelector('img').src);
-
-    function openLightbox(index) {
-      currentIndex = index;
-      lightboxImg.src = images[currentIndex];
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-      lightbox.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    function navigate(direction) {
-      currentIndex = (currentIndex + direction + images.length) % images.length;
-      lightboxImg.src = images[currentIndex];
-    }
-
-    galleryItems.forEach((item, index) => {
-      item.addEventListener('click', () => openLightbox(index));
-    });
-
-    closeBtn.addEventListener('click', closeLightbox);
-    prevBtn.addEventListener('click', () => navigate(-1));
-    nextBtn.addEventListener('click', () => navigate(1));
-
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (!lightbox.classList.contains('active')) return;
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') navigate(-1);
-      if (e.key === 'ArrowRight') navigate(1);
-    });
-  }
-
-  function initNewAnimations() {
-    const elements = container.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    elements.forEach(el => observer.observe(el));
-  }
-
   function formatDate(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 });

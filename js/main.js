@@ -1,7 +1,15 @@
 /* ============================================
    Bogensportverein 1960 Plauen e.V.
-   Navigation, Lightbox & Scroll-Animationen
+   Navigation, Lightbox, Scroll-Animationen
+   & gemeinsame Hilfsfunktionen
    ============================================ */
+
+/* --- Shared HTML Escape --- */
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
@@ -43,8 +51,9 @@ function initNavigation() {
 }
 
 /* --- Scroll Animations (IntersectionObserver) --- */
-function initScrollAnimations() {
-  const elements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+function initScrollAnimations(root) {
+  const container = root || document;
+  const elements = container.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
 
   if (!elements.length) return;
 
@@ -85,8 +94,9 @@ function loadCustomNavItems() {
 }
 
 /* --- Lightbox --- */
-function initLightbox() {
-  const galleryItems = document.querySelectorAll('.gallery-item');
+function initLightbox(container) {
+  const scope = container || document;
+  const galleryItems = scope.querySelectorAll('.gallery-item');
   const lightbox = document.getElementById('lightbox');
 
   if (!galleryItems.length || !lightbox) return;
@@ -135,4 +145,3 @@ function initLightbox() {
     if (e.key === 'ArrowRight') navigate(1);
   });
 }
-

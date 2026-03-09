@@ -24,12 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(() => {}); // Keep static fallback
 });
 
-function esc(str) {
-  const d = document.createElement('div');
-  d.textContent = str || '';
-  return d.innerHTML;
-}
-
 /* --- Hero Title --- */
 function renderTitle(hero, t) {
   const h1 = hero.querySelector('.hero-content h1');

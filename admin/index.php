@@ -59,7 +59,7 @@ if (!empty($_SESSION['user_id'])) {
             <button type="submit" class="btn btn-primary btn-full">Anmelden</button>
         </form>
 
-        <a href="../index.html" class="back-link">Zurück zur Website</a>
+        <a href="../index.php" class="back-link">Zurück zur Website</a>
     </div>
 </body>
 </html>
