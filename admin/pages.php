@@ -52,6 +52,13 @@ requireAuth();
                     <p>Datenschutzerklärung</p>
                 </a>
             </div>
+
+            <h2 style="margin-top: 2rem;">Eigene Seiten</h2>
+            <p class="welcome">Erstellen Sie neue Seiten mit frei wählbarem Inhalt.</p>
+            <div class="form-actions" style="margin-top: 1rem;">
+                <a href="custom-pages.php" class="btn btn-outline">Eigene Seiten verwalten</a>
+                <a href="edit-custom-page.php" class="btn btn-primary">Neue Seite erstellen</a>
+            </div>
         </div>
     </main>
 </body>

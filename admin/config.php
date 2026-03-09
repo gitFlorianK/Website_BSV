@@ -112,7 +112,24 @@ function ensureContentTables(PDO $db): void {
     if ($done) return;
     $done = true;
 
-    // Check if migration already done
+    // Custom pages (always ensure, added later)
+    $db->exec("
+        CREATE TABLE IF NOT EXISTS custom_pages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            slug TEXT UNIQUE NOT NULL,
+            title TEXT NOT NULL,
+            subtitle TEXT DEFAULT '',
+            content TEXT NOT NULL DEFAULT '',
+            published INTEGER DEFAULT 0,
+            show_in_nav INTEGER DEFAULT 0,
+            nav_label TEXT DEFAULT '',
+            sort_order INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ");
+
+    // Check if content migration already done
     $check = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='page_sections'")->fetch();
     if ($check) return;
 

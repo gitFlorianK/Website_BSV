@@ -7,6 +7,7 @@
             <a href="edit-post.php">Neuer Beitrag</a>
             <a href="events.php">Termine</a>
             <a href="pages.php">Inhalte</a>
+            <a href="custom-pages.php">Seiten</a>
             <?php if ($_SESSION['user_role'] === 'admin'): ?>
                 <a href="users.php">Benutzer</a>
             <?php endif; ?>

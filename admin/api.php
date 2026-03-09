@@ -66,6 +66,24 @@ switch ($action) {
         echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
         break;
 
+    case 'custom_page':
+        $slug = $_GET['slug'] ?? '';
+        if (!$slug) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Parameter slug fehlt']);
+            break;
+        }
+        $stmt = $db->prepare('SELECT id, slug, title, subtitle, content FROM custom_pages WHERE slug = ? AND published = 1');
+        $stmt->execute([$slug]);
+        $page = $stmt->fetch();
+        echo json_encode($page ?: null, JSON_UNESCAPED_UNICODE);
+        break;
+
+    case 'custom_pages_nav':
+        $stmt = $db->query('SELECT slug, nav_label, title FROM custom_pages WHERE published = 1 AND show_in_nav = 1 ORDER BY sort_order');
+        echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
+        break;
+
     case 'page_titles':
         $stmt = $db->query('SELECT page_key, title, subtitle FROM page_titles ORDER BY page_key');
         $rows = $stmt->fetchAll();
