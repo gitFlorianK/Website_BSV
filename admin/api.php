@@ -76,6 +76,73 @@ switch ($action) {
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         break;
 
+    case 'page_data':
+        $page = $_GET['page'] ?? '';
+        if (!$page) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Parameter page fehlt']);
+            break;
+        }
+
+        $result = [];
+
+        // Page title
+        $stmt = $db->prepare('SELECT title, subtitle FROM page_titles WHERE page_key = ?');
+        $stmt->execute([$page]);
+        $result['title'] = $stmt->fetch() ?: null;
+
+        // Page sections
+        $stmt = $db->prepare('SELECT section_key, content FROM page_sections WHERE page_key = ?');
+        $stmt->execute([$page]);
+        $sections = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $sections[$row['section_key']] = $row['content'];
+        }
+        $result['sections'] = $sections;
+
+        // Page-specific structured data
+        switch ($page) {
+            case 'index':
+                $result['board_members'] = $db->query('SELECT id, name, role, email, image FROM board_members ORDER BY sort_order')->fetchAll();
+                break;
+
+            case 'training':
+                $seasons = $db->query('SELECT * FROM training_seasons ORDER BY sort_order')->fetchAll();
+                foreach ($seasons as &$season) {
+                    $tStmt = $db->prepare('SELECT day, time_text, group_name FROM training_times WHERE season_id = ? ORDER BY sort_order');
+                    $tStmt->execute([$season['id']]);
+                    $season['times'] = $tStmt->fetchAll();
+                }
+                $result['seasons'] = $seasons;
+                break;
+
+            case 'anfaengerkurs':
+                $courses = $db->query('SELECT * FROM courses ORDER BY sort_order')->fetchAll();
+                foreach ($courses as &$course) {
+                    $dStmt = $db->prepare('SELECT date_text, note FROM course_dates WHERE course_id = ? ORDER BY sort_order');
+                    $dStmt->execute([$course['id']]);
+                    $course['dates'] = $dStmt->fetchAll();
+                }
+                $result['courses'] = $courses;
+                break;
+
+            case 'sponsors':
+                $result['sponsors'] = $db->query('SELECT id, name, address, phone, website FROM sponsors ORDER BY sort_order')->fetchAll();
+                break;
+
+            case 'information':
+                $links = $db->query('SELECT id, category, title, subtitle, url FROM info_links ORDER BY category, sort_order')->fetchAll();
+                $grouped = ['verbaende' => [], 'vereine' => []];
+                foreach ($links as $link) {
+                    $grouped[$link['category']][] = $link;
+                }
+                $result['links'] = $grouped;
+                break;
+        }
+
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        break;
+
     default:
         http_response_code(400);
         echo json_encode(['error' => 'Unbekannte Aktion']);
