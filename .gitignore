@@ -23,6 +23,9 @@
 /refs
 .gitmodules
 
+# SSL-Zertifikate
+.ssl/
+
 # CMS
 admin/data/*.db
 admin/data/*.db-wal

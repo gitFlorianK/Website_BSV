@@ -44,21 +44,45 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 
 ## Lokal starten
 
-```bash
-# Nur lokal erreichbar:
-php -S localhost:8000
+### HTTPS (empfohlen)
 
-# Im lokalen Netzwerk erreichbar (z.B. vom Handy/Tablet):
+Voraussetzung: `stunnel` und `openssl` installiert.
+
+```bash
+# 1. Selbst-signiertes Zertifikat erstellen (einmalig):
+mkdir -p .ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout .ssl/server.key -out .ssl/server.crt \
+  -subj "/CN=BSV-Plauen-Dev" \
+  -addext "subjectAltName=DNS:localhost,IP:0.0.0.0,IP:<EIGENE-IP>"
+cat .ssl/server.key .ssl/server.crt > .ssl/server.pem
+
+# 2. stunnel-Konfiguration erstellen (.ssl/stunnel.conf):
+#    [https]
+#    accept = 0.0.0.0:8443
+#    connect = 127.0.0.1:8000
+#    cert = <PFAD>/.ssl/server.pem
+
+# 3. Server starten:
+php -S 127.0.0.1:8000 &
+stunnel .ssl/stunnel.conf
+```
+
+### HTTP (einfach)
+
+```bash
 php -S 0.0.0.0:8000
 ```
 
 | Zugriff | URL |
 |---|---|
-| Lokal | http://localhost:8000 |
-| Netzwerk | http://&lt;IP-Adresse&gt;:8000 (eigene IP mit `hostname -I` ermitteln) |
-| CMS-Login | http://localhost:8000/admin/ |
+| HTTPS lokal | https://localhost:8443 |
+| HTTPS Netzwerk | https://&lt;IP-Adresse&gt;:8443 |
+| HTTP lokal | http://localhost:8000 |
+| CMS-Login | https://localhost:8443/admin/ |
 
-> **Hinweis:** Bei Zugriff aus dem Netzwerk muss ggf. der Port in der Firewall freigegeben werden: `sudo firewall-cmd --add-port=8000/tcp`
+> **Hinweis:** Bei selbst-signierten Zertifikaten zeigt der Browser eine Warnung – diese kann übersprungen werden.
+> Firewall-Freigabe falls nötig: `sudo firewall-cmd --add-port=8443/tcp`
 
 ## Projektstruktur
 
