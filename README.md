@@ -23,6 +23,17 @@ Die Website verfügt über ein integriertes Content-Management-System unter `/ad
 - **Bild-Upload** – Bilder direkt im CMS hochladen (max. 5 MB, JPG/PNG/WebP/GIF); große Bilder werden automatisch im Browser komprimiert und verkleinert
 - **Nutzerverwaltung** – Rollen-basiertes System
 
+### Sicherheit
+
+- **Session-Schutz** – `session_regenerate_id(true)` nach Login verhindert Session Fixation
+- **Rate-Limiting** – Max. 10 Login-Versuche in 15 Minuten (Session-basiert)
+- **XSS-Schutz** – Doppelte Absicherung: serverseitig `sanitizeContentHtml()` via `strip_tags`-Allowlist, clientseitig `sanitizeHtml()` entfernt Script/Style/Event-Handler
+- **CSRF-Schutz** – Token-basiert für alle POST-Formulare
+- **CORS** – Same-Origin-Only (kein `Access-Control-Allow-Origin: *`)
+- **Security-Header** – `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`
+- **API-Pagination** – `LIMIT/OFFSET` mit Maximum (200) verhindert Speicherprobleme
+- **Standard-Passwort-Warnung** – Dashboard zeigt Warnung, wenn `admin2024` noch aktiv ist
+
 ### Rollen
 
 | Rolle | Rechte |
@@ -101,8 +112,9 @@ website_bsv/
 ├── datenschutz.php         # Datenschutzerklärung
 ├── page.php                # Template für eigene CMS-Seiten
 ├── includes/
-│   ├── header.php          # Gemeinsamer Header (Head, Navigation)
-│   └── footer.php          # Gemeinsamer Footer (Kontakt, Links, Scripts)
+│   ├── header.php          # Gemeinsamer Header (Head, Navigation, Security-Header)
+│   ├── footer.php          # Gemeinsamer Footer (Kontakt, Links, Scripts)
+│   └── bootstrap.php       # Minimaler Bootstrap für Frontend-DB-Zugriff
 ├── Logo_Verein_2_FK.JPG    # Vereinslogo (Header)
 ├── css/
 │   └── style.css           # Gesamtes Styling
@@ -123,12 +135,13 @@ website_bsv/
 │   ├── edit-custom-page.php # Eigene Seite erstellen/bearbeiten
 │   ├── users.php           # Benutzerverwaltung (nur Admin)
 │   ├── api.php             # JSON-API für Frontend
-│   ├── config.php          # DB-Setup, Auth, Sicherheit
-│   ├── schema.php          # Datenbank-Schema und Seed-Daten
+│   ├── config.php          # DB-Setup, Auth, CSRF, Sanitize-Funktionen
+│   ├── schema.php          # Datenbank-Schema, Migrationen, Seed-Daten
 │   ├── logout.php          # Abmeldung
 │   ├── css/admin.css       # Admin-Panel-Styling
 │   ├── partials/nav.php    # Admin-Navigation
 │   └── data/               # SQLite-Datenbank (wird automatisch erstellt)
+├── REVIEW.md              # Code-Review mit Sicherheitsaudit
 ├── uploads/                # Hochgeladene Bilder
 └── images/
     ├── index/              # Vorstand-Fotos
