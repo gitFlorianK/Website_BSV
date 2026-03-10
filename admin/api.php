@@ -2,7 +2,14 @@
 require_once __DIR__ . '/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('X-Content-Type-Options: nosniff');
+
+// CORS: only allow same origin (no cross-origin API access)
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$serverHost = $_SERVER['HTTP_HOST'] ?? '';
+if ($origin && parse_url($origin, PHP_URL_HOST) === $serverHost) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
 
 $db = getDB();
 
@@ -11,6 +18,8 @@ $action = $_GET['action'] ?? '';
 switch ($action) {
     case 'posts':
         $type = $_GET['type'] ?? '';
+        $limit = min(max((int)($_GET['limit'] ?? 50), 1), 200);
+        $offset = max((int)($_GET['offset'] ?? 0), 0);
         $where = 'WHERE p.published = 1';
         $params = [];
 
@@ -19,6 +28,9 @@ switch ($action) {
             $params[] = $type;
         }
 
+        $params[] = $limit;
+        $params[] = $offset;
+
         $stmt = $db->prepare("
             SELECT p.id, p.type, p.title, p.content, p.category, p.created_at,
                    u.display_name as author
@@ -26,6 +38,7 @@ switch ($action) {
             JOIN users u ON p.author_id = u.id
             $where
             ORDER BY p.created_at DESC
+            LIMIT ? OFFSET ?
         ");
         $stmt->execute($params);
         $posts = $stmt->fetchAll();
@@ -42,6 +55,11 @@ switch ($action) {
 
     case 'post':
         $id = (int)($_GET['id'] ?? 0);
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Parameter id fehlt'], JSON_UNESCAPED_UNICODE);
+            break;
+        }
         $stmt = $db->prepare("
             SELECT p.id, p.type, p.title, p.content, p.category, p.created_at,
                    u.display_name as author
@@ -52,13 +70,17 @@ switch ($action) {
         $stmt->execute([$id]);
         $post = $stmt->fetch();
 
-        if ($post) {
-            $imgStmt = $db->prepare('SELECT id, filename, alt_text FROM images WHERE post_id = ? ORDER BY sort_order');
-            $imgStmt->execute([$post['id']]);
-            $post['images'] = $imgStmt->fetchAll();
+        if (!$post) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Beitrag nicht gefunden'], JSON_UNESCAPED_UNICODE);
+            break;
         }
 
-        echo json_encode($post ?: null, JSON_UNESCAPED_UNICODE);
+        $imgStmt = $db->prepare('SELECT id, filename, alt_text FROM images WHERE post_id = ? ORDER BY sort_order');
+        $imgStmt->execute([$post['id']]);
+        $post['images'] = $imgStmt->fetchAll();
+
+        echo json_encode($post, JSON_UNESCAPED_UNICODE);
         break;
 
     case 'events':
@@ -70,13 +92,18 @@ switch ($action) {
         $slug = $_GET['slug'] ?? '';
         if (!$slug) {
             http_response_code(400);
-            echo json_encode(['error' => 'Parameter slug fehlt']);
+            echo json_encode(['error' => 'Parameter slug fehlt'], JSON_UNESCAPED_UNICODE);
             break;
         }
         $stmt = $db->prepare('SELECT id, slug, title, subtitle, content FROM custom_pages WHERE slug = ? AND published = 1');
         $stmt->execute([$slug]);
         $page = $stmt->fetch();
-        echo json_encode($page ?: null, JSON_UNESCAPED_UNICODE);
+        if (!$page) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Seite nicht gefunden'], JSON_UNESCAPED_UNICODE);
+            break;
+        }
+        echo json_encode($page, JSON_UNESCAPED_UNICODE);
         break;
 
     case 'custom_pages_nav':
@@ -98,7 +125,14 @@ switch ($action) {
         $page = $_GET['page'] ?? '';
         if (!$page) {
             http_response_code(400);
-            echo json_encode(['error' => 'Parameter page fehlt']);
+            echo json_encode(['error' => 'Parameter page fehlt'], JSON_UNESCAPED_UNICODE);
+            break;
+        }
+
+        $validPages = ['index', 'training', 'anfaengerkurs', 'sponsors', 'contact', 'information', 'imprint', 'datenschutz', 'aktuelles'];
+        if (!in_array($page, $validPages)) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Unbekannte Seite'], JSON_UNESCAPED_UNICODE);
             break;
         }
 
@@ -163,5 +197,5 @@ switch ($action) {
 
     default:
         http_response_code(400);
-        echo json_encode(['error' => 'Unbekannte Aktion']);
+        echo json_encode(['error' => 'Unbekannte Aktion'], JSON_UNESCAPED_UNICODE);
 }

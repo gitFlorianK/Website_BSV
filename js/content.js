@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.sponsors) renderSponsors(data.sponsors);
       if (data.links) renderInfoLinks(data.links);
     })
-    .catch(() => {}); // Keep static fallback
+    .catch(err => console.warn('CMS content load failed:', err));
 });
 
 /* --- Hero Title --- */

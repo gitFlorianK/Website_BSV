@@ -34,6 +34,23 @@ $recentPosts = $db->query("
             <h1>Dashboard</h1>
             <p class="welcome">Willkommen, <?= sanitize($_SESSION['user_name']) ?>!</p>
 
+            <?php
+            // Warn if default password is still active
+            $pwStmt = $db->prepare('SELECT password_hash FROM users WHERE id = ?');
+            $pwStmt->execute([$_SESSION['user_id']]);
+            $pwRow = $pwStmt->fetch();
+            if ($pwRow && password_verify('admin2024', $pwRow['password_hash'])):
+            ?>
+            <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+                <strong>Sicherheitswarnung:</strong> Sie verwenden noch das Standard-Passwort. Bitte ändern Sie es umgehend unter
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                    <a href="users.php" style="color: inherit; text-decoration: underline;">Benutzerverwaltung</a>.
+                <?php else: ?>
+                    Kontaktieren Sie Ihren Administrator.
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number"><?= $postCount ?></div>

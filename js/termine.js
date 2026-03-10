@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const events = await res.json();
       renderEvents(events);
     } catch (err) {
+      console.warn('Events load failed:', err);
       // Fallback: static content
       timeline.innerHTML = `
         <div class="timeline-item">

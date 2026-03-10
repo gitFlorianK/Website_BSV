@@ -1,4 +1,10 @@
 <?php
+date_default_timezone_set('Europe/Berlin');
+
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 $siteTitle = 'Bogensportverein 1960 Plauen e.V.';
 $fullTitle = !empty($pageTitle) ? "$pageTitle | $siteTitle" : $siteTitle;
 $activePage = $activePage ?? '';

@@ -7,7 +7,6 @@ $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $post = null;
 $postImages = [];
 $error = '';
-$success = '';
 
 if ($postId) {
     $stmt = $db->prepare('SELECT * FROM posts WHERE id = ?');
@@ -93,17 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: edit-post.php?id=' . $postId . '&saved=1');
         exit;
     }
-}
-
-// Reload post and images after potential changes
-if ($postId) {
-    $stmt = $db->prepare('SELECT * FROM posts WHERE id = ?');
-    $stmt->execute([$postId]);
-    $post = $stmt->fetch();
-
-    $imgStmt = $db->prepare('SELECT * FROM images WHERE post_id = ? ORDER BY sort_order');
-    $imgStmt->execute([$postId]);
-    $postImages = $imgStmt->fetchAll();
 }
 ?>
 <!DOCTYPE html>

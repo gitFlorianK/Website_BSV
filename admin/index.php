@@ -5,22 +5,37 @@ $error = '';
 
 // Handle login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
-    $db = getDB();
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    // Rate-limit: block after 10 failed attempts in 15 minutes
+    $now = time();
+    $attempts = $_SESSION['login_attempts'] ?? [];
+    $attempts = array_filter($attempts, fn($t) => $t > $now - 900);
 
-    $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
+    if (count($attempts) >= 10) {
+        $error = 'Zu viele fehlgeschlagene Versuche. Bitte warten Sie 15 Minuten.';
+    } else {
+        $db = getDB();
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
 
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['display_name'];
-        $_SESSION['user_role'] = $user['role'];
-        header('Location: dashboard.php');
-        exit;
+        $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
+        $stmt->execute([$username]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password_hash'])) {
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['display_name'];
+            $_SESSION['user_role'] = $user['role'];
+            $_SESSION['login_attempts'] = [];
+            header('Location: dashboard.php');
+            exit;
+        }
+
+        // Track failed attempt
+        $attempts[] = $now;
+        $_SESSION['login_attempts'] = $attempts;
+        $error = 'Benutzername oder Passwort falsch.';
     }
-    $error = 'Benutzername oder Passwort falsch.';
 }
 
 // Redirect if already logged in

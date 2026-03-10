@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/admin/config.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 
 $slug = $_GET['slug'] ?? '';
 if (!$slug) {
@@ -39,7 +39,7 @@ include __DIR__ . '/includes/header.php';
   <section class="section">
     <div class="container">
       <div class="page-content fade-in">
-        <?= $pageData['content'] ?>
+        <?= sanitizeContentHtml($pageData['content']) ?>
       </div>
     </div>
   </section>

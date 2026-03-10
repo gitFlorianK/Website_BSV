@@ -42,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $slug = preg_replace('/ß/', 'ss', $slug);
         $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
         $slug = trim($slug, '-');
+        if (empty($slug)) {
+            $slug = 'seite-' . time();
+        }
     }
 
     // Reservierte Slugs

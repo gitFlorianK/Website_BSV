@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="post-badge post-badge-blog">Bericht</span>
         </div>
         <h4>${esc(post.title)}</h4>
-        <div class="post-content">${post.content || ''}</div>
+        <div class="post-content">${sanitizeHtml(post.content || '')}</div>
     `;
 
     if (post.images && post.images.length > 0) {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     if (post.content) {
-      html += `<div class="post-content">${post.content}</div>`;
+      html += `<div class="post-content">${sanitizeHtml(post.content)}</div>`;
     }
 
     if (post.images && post.images.length > 0) {

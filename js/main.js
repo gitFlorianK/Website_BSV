@@ -11,6 +11,24 @@ function esc(str) {
   return d.innerHTML;
 }
 
+/* --- Sanitize HTML (allow safe tags, strip scripts) --- */
+function sanitizeHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html || '';
+  // Remove all script/style/event handlers
+  tmp.querySelectorAll('script, style, iframe, object, embed, link').forEach(el => el.remove());
+  // Remove event handler attributes from all elements
+  tmp.querySelectorAll('*').forEach(el => {
+    for (const attr of Array.from(el.attributes)) {
+      if (attr.name.startsWith('on') || attr.name === 'srcdoc' ||
+          (attr.name === 'href' && attr.value.trim().toLowerCase().startsWith('javascript:'))) {
+        el.removeAttribute(attr.name);
+      }
+    }
+  });
+  return tmp.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initScrollAnimations();
@@ -90,7 +108,7 @@ function loadCustomNavItems() {
         navList.appendChild(li);
       });
     })
-    .catch(() => {});
+    .catch(err => console.warn('Custom nav load failed:', err));
 }
 
 /* --- Lightbox --- */

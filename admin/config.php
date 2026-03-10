@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+date_default_timezone_set('Europe/Berlin');
+
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 define('DB_PATH', __DIR__ . '/data/cms.db');
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_URL', 'uploads/');
@@ -65,4 +71,8 @@ function verifyCsrf(): void {
 
 function sanitize(string $str): string {
     return htmlspecialchars(trim($str), ENT_QUOTES, 'UTF-8');
+}
+
+function sanitizeContentHtml(string $html): string {
+    return strip_tags($html, '<h2><h3><h4><p><ul><ol><li><a><strong><em><br><img><table><thead><tbody><tr><th><td><div><span>');
 }
