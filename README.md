@@ -148,6 +148,10 @@ website_bsv/
     └── training/           # Trainingsplatz-Foto
 ```
 
+## Design-Hinweise
+
+- **Vorstand-Fotos** – Werden als Rechtecke im Hochformat (180×240 px) mit abgerundeten Ecken (12 px) dargestellt statt als runde Porträts. CSS: `.vorstand-card .card-img` in `css/style.css`.
+
 ## Browser-Kompatibilität
 
 - Chrome / Edge 88+
