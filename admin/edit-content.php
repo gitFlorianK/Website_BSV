@@ -610,7 +610,7 @@ $sectionLabels = [
 
             <?php elseif ($page === 'information'): ?>
                 <?php
-                $links = $db->query('SELECT * FROM info_links ORDER BY category, sort_order')->fetchAll();
+                $links = $db->query("SELECT * FROM info_links WHERE category = 'verbaende' ORDER BY sort_order")->fetchAll();
                 ?>
                 <div class="card admin-card">
                     <h2>Externe Links</h2>
@@ -620,27 +620,21 @@ $sectionLabels = [
                         <?php foreach ($links as $link): ?>
                         <div class="card admin-card" style="background: var(--bg-dark);">
                             <input type="hidden" name="link_id[]" value="<?= $link['id'] ?>">
+                            <input type="hidden" name="link_category[]" value="verbaende">
                             <div class="form-row">
                                 <div class="form-group form-group-wide">
                                     <label>Titel</label>
                                     <input type="text" name="link_title[]" value="<?= sanitize($link['title']) ?>" required>
                                 </div>
-                                <div class="form-group">
-                                    <label>Kategorie</label>
-                                    <select name="link_category[]">
-                                        <option value="verbaende" <?= $link['category'] === 'verbaende' ? 'selected' : '' ?>>Verbände</option>
-                                        <option value="vereine" <?= $link['category'] === 'vereine' ? 'selected' : '' ?>>Vereine</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
                                 <div class="form-group form-group-wide">
                                     <label>URL</label>
                                     <input type="text" name="link_url[]" value="<?= sanitize($link['url']) ?>" required>
                                 </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label>Untertitel</label>
-                                    <input type="text" name="link_subtitle[]" value="<?= sanitize($link['subtitle']) ?>" placeholder="z.B. Ort oder Domain">
+                                    <input type="text" name="link_subtitle[]" value="<?= sanitize($link['subtitle']) ?>" placeholder="z.B. Domain">
                                 </div>
                             </div>
                             <form method="post" class="inline-form" onsubmit="return confirm('Link wirklich löschen?')">
@@ -658,13 +652,13 @@ $sectionLabels = [
                     <form method="post">
                         <input type="hidden" name="csrf_token" value="<?= csrfToken() ?>">
                         <input type="hidden" name="action" value="add_link">
+                        <input type="hidden" name="new_category" value="verbaende">
                         <div class="form-row">
                             <div class="form-group form-group-wide"><label>Titel</label><input type="text" name="new_title" required></div>
-                            <div class="form-group"><label>Kategorie</label><select name="new_category"><option value="verbaende">Verbände</option><option value="vereine">Vereine</option></select></div>
+                            <div class="form-group form-group-wide"><label>URL</label><input type="text" name="new_url" required placeholder="https://..."></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group form-group-wide"><label>URL</label><input type="text" name="new_url" required placeholder="https://..."></div>
-                            <div class="form-group"><label>Untertitel</label><input type="text" name="new_subtitle" placeholder="Ort oder Domain"></div>
+                            <div class="form-group"><label>Untertitel</label><input type="text" name="new_subtitle" placeholder="Domain"></div>
                         </div>
                         <button type="submit" class="btn btn-primary">Hinzufügen</button>
                     </form>

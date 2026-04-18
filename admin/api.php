@@ -183,12 +183,8 @@ switch ($action) {
                 break;
 
             case 'information':
-                $links = $db->query('SELECT id, category, title, subtitle, url FROM info_links ORDER BY category, sort_order')->fetchAll();
-                $grouped = ['verbaende' => [], 'vereine' => []];
-                foreach ($links as $link) {
-                    $grouped[$link['category']][] = $link;
-                }
-                $result['links'] = $grouped;
+                $links = $db->query("SELECT id, category, title, subtitle, url FROM info_links WHERE category = 'verbaende' ORDER BY sort_order")->fetchAll();
+                $result['links'] = ['verbaende' => $links];
                 break;
         }
 

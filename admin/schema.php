@@ -287,11 +287,6 @@ function seedContentData(PDO $db): void {
         ('verbaende', 'Deutscher Bogenschützenverband (DBSV)', 'dbsv1959.de', 'https://www.dbsv1959.de/', 1),
         ('verbaende', 'Sächsischer Bogensportverband', 'sachsenbogen.de', 'https://www.sachsenbogen.de/sbv/index.php', 2),
         ('verbaende', 'Bogensportinfo', 'bogensportinfo.de', 'http://www.bogensportinfo.de/', 3),
-        ('verbaende', 'Bogensportmagazin', 'bogensport-extra.de', 'https://www.bogensport-extra.de/index.php', 4),
-        ('vereine', 'Bogensportclub Glauchau e.V.', 'Glauchau', 'https://www.the-bowmen.de/site/index.php', 1),
-        ('vereine', 'SV Koweg Görlitz', 'Görlitz', 'http://www.sv-koweg.de/index.php?id=22', 2),
-        ('vereine', 'SG Motor Gohlis-Nord Leipzig e.V.', 'Leipzig', 'https://www.mogono-bogen.de/', 3),
-        ('vereine', 'Radeberger Sportverein e.V.', 'Radeberg', 'https://www.radebergersv-bogenschiessen.de/', 4),
-        ('vereine', 'OSV Zittau e.V.', 'Zittau', 'http://www.osvzittau.de/bogensport.html', 5)
+        ('verbaende', 'Bogensportmagazin', 'bogensport-extra.de', 'https://www.bogensport-extra.de/index.php', 4)
     ");
 }

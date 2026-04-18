@@ -183,13 +183,8 @@ function renderSponsors(sponsors) {
 /* --- Info Links (information) --- */
 function renderInfoLinks(links) {
   const vGrid = document.querySelector('[data-cms="links-verbaende"]');
-  const cGrid = document.querySelector('[data-cms="links-vereine"]');
-
   if (vGrid && links.verbaende) {
     vGrid.innerHTML = links.verbaende.map(l => linkCard(l, '&#127993;')).join('');
-  }
-  if (cGrid && links.vereine) {
-    cGrid.innerHTML = links.vereine.map(l => linkCard(l, '&#127919;')).join('');
   }
 }
 
