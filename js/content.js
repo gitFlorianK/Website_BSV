@@ -173,11 +173,14 @@ function renderSponsors(sponsors) {
     <div class="card sponsor-card fade-in visible">
       <h3>${esc(s.name)}</h3>
       <div class="sponsor-info">
-        ${esc(s.address)}${s.phone ? '<br>Tel: ' + esc(s.phone) : ''}
+        ${esc(s.address)}${s.phone ? '<br>Tel: ' + esc(s.phone) : ''}${s.website ? '<br>Web: ' + esc(stripUrl(s.website)) : ''}
       </div>
-      ${s.website ? `<a href="${esc(s.website)}" target="_blank" rel="noopener" class="sponsor-link btn btn-outline">Website besuchen</a>` : ''}
     </div>
   `).join('');
+}
+
+function stripUrl(url) {
+  return url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
 }
 
 /* --- Info Links (information) --- */

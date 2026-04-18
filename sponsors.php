@@ -23,9 +23,9 @@ include __DIR__ . '/includes/header.php';
           <div class="sponsor-info">
             Teichstraße 4a<br>
             08527 Rößnitz<br>
-            Tel: 037431 88288
+            Tel: 037431 88288<br>
+            Web: www.tischlerei-fritzsch.de
           </div>
-          <a href="https://www.tischlerei-fritzsch.de" target="_blank" rel="noopener" class="sponsor-link btn btn-outline">Website besuchen</a>
         </div>
 
         <div class="card sponsor-card fade-in">
@@ -33,9 +33,9 @@ include __DIR__ . '/includes/header.php';
           <div class="sponsor-info">
             Weststraße 63<br>
             08523 Plauen<br>
-            Tel: 03741 21 20
+            Tel: 03741 21 20<br>
+            Web: www.elektrotechnik-plauen.de
           </div>
-          <a href="https://www.elektrotechnik-plauen.de" target="_blank" rel="noopener" class="sponsor-link btn btn-outline">Website besuchen</a>
         </div>
 
         <div class="card sponsor-card fade-in">
@@ -43,9 +43,9 @@ include __DIR__ . '/includes/header.php';
           <div class="sponsor-info">
             Äußere Reichenbacher Straße<br>
             08529 Plauen<br>
-            Tel: 03741 48 89 0
+            Tel: 03741 48 89 0<br>
+            Web: www.bauhaus.info
           </div>
-          <a href="https://www.bauhaus.info" target="_blank" rel="noopener" class="sponsor-link btn btn-outline">Website besuchen</a>
         </div>
 
         <div class="card sponsor-card fade-in">
@@ -53,9 +53,9 @@ include __DIR__ . '/includes/header.php';
           <div class="sponsor-info">
             Dr.-Friedrichs-Straße 42<br>
             08606 Oelsnitz<br>
-            Tel: 037421 72 24 0
+            Tel: 037421 72 24 0<br>
+            Web: www.nhochdrei.de/de
           </div>
-          <a href="https://www.nhochdrei.de/de/" target="_blank" rel="noopener" class="sponsor-link btn btn-outline">Website besuchen</a>
         </div>
 
         <div class="card sponsor-card fade-in">
