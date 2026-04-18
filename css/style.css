@@ -243,6 +243,7 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
   }
 
   .nav-list a {
+    color: var(--accent-orange);
     font-size: 1.2rem;
     padding: 0.75rem 2rem;
     width: 80%;
