@@ -186,7 +186,12 @@ if ($pageId && !$error) {
                         <div class="form-group">
                             <label for="sort_order">Sortierung</label>
                             <input type="text" id="sort_order" name="sort_order" value="<?= sanitize((string)($page['sort_order'] ?? '0')) ?>">
-                            <small class="form-help">Kleinere Zahlen = weiter links</small>
+                            <small class="form-help">
+                                Kleinere Zahlen = weiter links. Feste Einträge:
+                                Startseite 10, Training 20, Aktuelles 30, Sponsoren 40,
+                                Information 50, Anfängerkurs 60, Kontakt 70.
+                                Z.B. 25 platziert die Seite zwischen Training und Aktuelles.
+                            </small>
                         </div>
                     </div>
                 </div>

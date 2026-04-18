@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initScrollAnimations();
   initLightbox();
-  loadCustomNavItems();
 });
 
 /* --- Mobile Navigation --- */
@@ -88,27 +87,6 @@ function initScrollAnimations(root) {
   });
 
   elements.forEach(el => observer.observe(el));
-}
-
-/* --- Custom Nav Items from CMS --- */
-function loadCustomNavItems() {
-  const navList = document.querySelector('.nav-list');
-  if (!navList) return;
-
-  fetch('admin/api.php?action=custom_pages_nav')
-    .then(res => res.json())
-    .then(pages => {
-      if (!Array.isArray(pages) || !pages.length) return;
-      pages.forEach(p => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = 'page.php?slug=' + encodeURIComponent(p.slug);
-        a.textContent = p.nav_label || p.title;
-        li.appendChild(a);
-        navList.appendChild(li);
-      });
-    })
-    .catch(err => console.warn('Custom nav load failed:', err));
 }
 
 /* --- Lightbox --- */
