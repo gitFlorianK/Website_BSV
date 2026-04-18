@@ -230,13 +230,11 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--bg-dark);
+    background: rgba(0, 0, 0, 0.5);
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 2rem 0;
-    overflow-y: auto;
     transform: translateX(100%);
     transition: transform var(--transition);
   }
