@@ -1,4 +1,14 @@
 <?php
+$secureCookie = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+    || (($_SERVER['SERVER_PORT'] ?? '') === '443');
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'httponly' => true,
+    'samesite' => 'Lax',
+    'secure' => $secureCookie,
+]);
 session_start();
 
 date_default_timezone_set('Europe/Berlin');
@@ -74,5 +84,67 @@ function sanitize(string $str): string {
 }
 
 function sanitizeContentHtml(string $html): string {
-    return strip_tags($html, '<h2><h3><h4><p><ul><ol><li><a><strong><em><br><img><table><thead><tbody><tr><th><td><div><span>');
+    if (trim($html) === '') return '';
+
+    $allowedTags = ['h2','h3','h4','p','ul','ol','li','a','strong','em','br','img','table','thead','tbody','tr','th','td','div','span'];
+    $allowedAttrs = [
+        'a'   => ['href', 'title', 'target', 'rel'],
+        'img' => ['src', 'alt', 'title', 'width', 'height'],
+    ];
+
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    libxml_use_internal_errors(true);
+    $doc->loadHTML(
+        '<?xml encoding="UTF-8"><div>' . $html . '</div>',
+        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+    libxml_clear_errors();
+
+    $root = $doc->getElementsByTagName('div')->item(0);
+    if (!$root) return '';
+
+    $stripWithContent = ['script', 'style', 'iframe', 'object', 'embed', 'noscript'];
+
+    $xpath = new DOMXPath($doc);
+    foreach (iterator_to_array($xpath->query('.//*', $root)) as $node) {
+        $tag = strtolower($node->nodeName);
+        if (in_array($tag, $stripWithContent, true)) {
+            $node->parentNode->removeChild($node);
+            continue;
+        }
+        if (!in_array($tag, $allowedTags, true)) {
+            while ($node->firstChild) {
+                $node->parentNode->insertBefore($node->firstChild, $node);
+            }
+            $node->parentNode->removeChild($node);
+            continue;
+        }
+        $allowed = $allowedAttrs[$tag] ?? [];
+        foreach (iterator_to_array($node->attributes) as $attr) {
+            $name = strtolower($attr->name);
+            if (!in_array($name, $allowed, true)) {
+                $node->removeAttribute($attr->name);
+                continue;
+            }
+            if ($name === 'href' || $name === 'src') {
+                $val = trim($attr->value);
+                if (preg_match('#^(javascript|vbscript|data):#i', $val)) {
+                    $safeImgData = $name === 'src' && $tag === 'img'
+                        && preg_match('#^data:image/(png|jpeg|gif|webp);base64,#i', $val);
+                    if (!$safeImgData) {
+                        $node->removeAttribute($attr->name);
+                    }
+                }
+            }
+        }
+        if ($tag === 'a' && $node->getAttribute('target') === '_blank') {
+            $node->setAttribute('rel', 'noopener noreferrer');
+        }
+    }
+
+    $result = '';
+    foreach ($root->childNodes as $child) {
+        $result .= $doc->saveHTML($child);
+    }
+    return $result;
 }

@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'save';
 
     if ($action === 'delete' && $pageId) {
+        requireAdmin();
         $db->prepare('DELETE FROM custom_pages WHERE id = ?')->execute([$pageId]);
         header('Location: custom-pages.php?deleted=1');
         exit;

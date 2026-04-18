@@ -7,6 +7,7 @@ $db = getDB();
 // Handle delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     verifyCsrf();
+    requireAdmin();
     $postId = (int)($_POST['post_id'] ?? 0);
 
     // Delete associated images from disk

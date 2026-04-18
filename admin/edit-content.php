@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verifyCsrf();
     $action = $_POST['action'] ?? 'save_sections';
 
+    if (in_array($action, ['delete_board', 'delete_sponsor', 'delete_course', 'delete_link'], true)) {
+        requireAdmin();
+    }
+
     switch ($action) {
         case 'save_sections':
             $keys = $_POST['section_key'] ?? [];

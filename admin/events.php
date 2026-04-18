@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success = 'Termin wurde aktualisiert.';
         }
     } elseif ($action === 'delete') {
+        requireAdmin();
         $id = (int)($_POST['event_id'] ?? 0);
         $db->prepare('DELETE FROM events WHERE id = ?')->execute([$id]);
         $success = 'Termin wurde gelöscht.';
