@@ -229,12 +229,11 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
     top: var(--header-height);
     left: 0;
     right: 0;
-    bottom: 0;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.5);
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
+    padding: 1rem 0;
     transform: translateX(100%);
     transition: transform var(--transition);
   }
@@ -244,10 +243,10 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
   }
 
   .nav-list a {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: var(--radius);
     font-size: 1.2rem;
     padding: 0.75rem 2rem;
+    width: 80%;
+    text-align: center;
   }
 }
 
