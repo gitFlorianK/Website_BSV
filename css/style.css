@@ -229,7 +229,7 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
     top: var(--header-height);
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8);
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
