@@ -241,20 +241,22 @@ function seedContentData(PDO $db): void {
     // Training seasons
     $db->exec("
         INSERT INTO training_seasons (title, date_range, location_name, location_address, location_image, note, sort_order) VALUES
-        ('Sommertraining', '1. April bis 30. September', 'Bogensportplatz', 'Wolfsbergweg, 08525 Plauen', 'images/training/bogensportplatz_01.jpg', '', 1),
+        ('Sommertraining', '1. April bis 30. September', 'Bogensportplatz', 'Wolfsbergweg 1c, 08525 Plauen', 'images/training/bogensportplatz_01.jpg', '', 1),
         ('Wintertraining', '1. Oktober bis 31. März', 'Turnhalle Rückertschule', 'Rückertstraße 33, 08525 Plauen', '', '* Alle anderen Schützen müssen bitte auf die anderen Trainingszeiten ausweichen', 2)
     ");
 
     // Training times
     $db->exec("
         INSERT INTO training_times (season_id, day, time_text, group_name, sort_order) VALUES
-        (1, 'Montag', 'ab 17:00 Uhr', 'Bögen ohne Visier (Jagdschützen)', 1),
-        (1, 'Dienstag', '17:00 – 18:30 Uhr', 'Kinder und Jugendmannschaften', 2),
-        (1, 'Donnerstag', 'ab 18:00 Uhr', 'Bögen mit Visier (Scheibenschießen)', 3),
+        (1, 'Montag', 'ab 17:00 Uhr', 'Freies Training aller Bogenklassen', 1),
+        (1, 'Dienstag', '17:00 - 18:30 Uhr', 'Kinder und Jugendmannschaften', 2),
+        (1, 'Donnerstag', 'ab 18:00 Uhr', 'Freies Training aller Bogenklassen', 3),
+        (1, 'Samstag', '10:00 - 12:00 Uhr', 'Freies Training aller Bogenklassen', 4),
         (2, 'Montag', '16:30 – 18:00 Uhr', 'Erwachsene', 1),
-        (2, 'Dienstag', '16:30 – 19:30 Uhr', 'Kinder und Jugendmannschaften*', 2),
-        (2, 'Donnerstag', '18:00 – 20:15 Uhr', 'Erwachsene', 3),
-        (2, 'Samstag', '10:00 – 12:15 Uhr', 'Offenes Training', 4)
+        (2, 'Dienstag', '16:30 – 18:30 Uhr', 'Kinder und Jugendmannschaften*', 2),
+        (2, 'Dienstag', '18:30 – 19:30 Uhr', 'Erwachsene', 3),
+        (2, 'Donnerstag', '18:00 – 20:15 Uhr', 'Erwachsene', 4),
+        (2, 'Samstag', '10:00 – 12:15 Uhr', 'Offenes Training', 5)
     ");
 
     // Courses

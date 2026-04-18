@@ -25,7 +25,7 @@ include __DIR__ . '/includes/header.php';
           <h3>Standort</h3>
           <p class="training-location">
             Bogensportplatz<br>
-            Wolfsbergweg, 08525 Plauen
+            Wolfsbergweg 1c, 08525 Plauen
           </p>
           <img src="images/training/bogensportplatz_01.jpg" alt="Bogensportplatz Plauen" style="border-radius: var(--radius); margin-top: 1rem;">
         </div>
@@ -42,17 +42,22 @@ include __DIR__ . '/includes/header.php';
             <tr>
               <td>Montag</td>
               <td>ab 17:00 Uhr</td>
-              <td>Bögen ohne Visier (Jagdschützen)</td>
+              <td>Freies Training aller Bogenklassen</td>
             </tr>
             <tr>
               <td>Dienstag</td>
-              <td>17:00 – 18:30 Uhr</td>
+              <td>17:00 - 18:30 Uhr</td>
               <td>Kinder und Jugendmannschaften</td>
             </tr>
             <tr>
               <td>Donnerstag</td>
               <td>ab 18:00 Uhr</td>
-              <td>Bögen mit Visier (Scheibenschießen)</td>
+              <td>Freies Training aller Bogenklassen</td>
+            </tr>
+            <tr>
+              <td>Samstag</td>
+              <td>10:00 - 12:00 Uhr</td>
+              <td>Freies Training aller Bogenklassen</td>
             </tr>
           </tbody>
         </table>
@@ -91,8 +96,13 @@ include __DIR__ . '/includes/header.php';
             </tr>
             <tr>
               <td>Dienstag</td>
-              <td>16:30 – 19:30 Uhr</td>
+              <td>16:30 – 18:30 Uhr</td>
               <td>Kinder und Jugendmannschaften*</td>
+            </tr>
+            <tr>
+              <td>Dienstag</td>
+              <td>18:30 – 19:30 Uhr</td>
+              <td>Erwachsene</td>
             </tr>
             <tr>
               <td>Donnerstag</td>
