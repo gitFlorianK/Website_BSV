@@ -216,6 +216,10 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); }
 }
 
 @media (max-width: 900px) {
+  .header {
+    background: var(--bg-dark);
+  }
+
   .hamburger {
     display: flex;
   }
